@@ -9,7 +9,7 @@ function Tower(x, y, width, height) {
     this.color = "red";
 }
 Tower.prototype.draw = function () {
-    ctx = gameArea.context;
+    ctx = game.gameArea.context;
     ctx.fillStyle = this.color;
     ctx.fillRect(this.x + this.margin, 
         this.y + this.margin,

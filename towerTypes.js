@@ -5,7 +5,7 @@ function BasicTower(x, y, width, height) {
     this.prize = 10;
 }
 inheritPseudoClass(Tower, BasicTower);
-availableTowers.push(BasicTower);
+game.availableTowers.push(BasicTower);
 
 
 function GunTower(x, y, width, height) {
@@ -14,4 +14,4 @@ function GunTower(x, y, width, height) {
     this.prize = 20;
 }
 inheritPseudoClass(Tower, GunTower);
-availableTowers.push(GunTower);
+game.availableTowers.push(GunTower);

@@ -8,8 +8,12 @@ function Tile(x, y, width, height) {
     this.selected = false;
     this.tower = null;
 
+    this.isWalkable = function() {
+        return this.tower == null;
+    }
+
     this.draw = function() {
-        ctx = gameArea.context;
+        var ctx = game.gameArea.context;
         
         ctx.fillStyle = "#bbbbbb";
         ctx.fillRect(this.x + this.margin, this.y + this.margin, this.width - this.margin * 2, this.height - this.margin * 2);

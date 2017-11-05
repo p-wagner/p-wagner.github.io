@@ -1,5 +1,5 @@
 function getMouse(e) {
-    var element = canvas,
+    var element = game.canvas,
         offsetX = 0,
         offsetY = 0,
         mx, my;
