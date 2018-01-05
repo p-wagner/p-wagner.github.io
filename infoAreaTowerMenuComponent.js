@@ -6,6 +6,9 @@ function InfoAreaTowerMenuComponent() {
             if (currentTile.tower != null) {
                 return true;
             }
+            if (currentTile instanceof EndTile) {
+                return true;
+            }
         }
         return false;
     }
@@ -36,6 +39,7 @@ function InfoAreaTowerMenuComponent() {
     }
     this.draw = function () {
         var padding = 5;
+        ctx.font = "9px Arial";
         ctx.fillStyle = "red";
         ctx.fillRect(this.sellButton.x, this.sellButton.y, this.sellButton.width, this.sellButton.height);
         ctx.fillStyle = "black";
@@ -48,6 +52,9 @@ function InfoAreaTowerMenuComponent() {
     }
 
     this.handleMouseDown = function (e) {
+        if (game.gameArea.gameState == "GAMEOVER") {
+            return;
+        }
         if (!this.isActive()) {
             return;
         }

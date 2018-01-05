@@ -1,6 +1,16 @@
 function PathFinder() {
+    this.openList = [];
+    this.closedList = [];
+
     var sort = function (a, b) {
-        return b.distance - a.distance;
+        var factor = 1.4;
+        if ((b.distance * factor + b.pathLength) > (a.distance * factor + a.pathLength)) {
+            return -1;
+        }
+        if ((b.distance * factor + b.pathLength) < (a.distance * factor + a.pathLength)) {
+            return 1;
+        }
+        return 0;
     }
 
     var calcDistance = function (x1, y1, x2, y2) {
@@ -9,27 +19,43 @@ function PathFinder() {
         return Math.sqrt(a * a + b * b);
     }
 
-    var checkTile = function (visited, queue, grid, element, x, y, endX, endY) {
-        for(var i = 0; i < visited.length; i++) {
-            var current = visited[i];
+    var expandTile = function (closedList, openList, grid, element, x, y, endX, endY) {
+        for (var i = 0; i < closedList.length; i++) {
+            var current = closedList[i];
             if (current.x == x && current.y == y) {
                 return;
             }
         }
-        visited.push({
-            x: x,
-            y: y
-        });
 
         var tile = grid[x][y];
         if (tile.isWalkable()) {
-            queue.push({
+
+            var pathLength = element.pathLength + calcDistance(element.x, element.y, x, y)
+
+            var elementInOpenList = null;
+            var openListIndex = 0;
+            for (var openListIndex = 0; openListIndex < openList.length; openListIndex++) {
+                var current = openList[openListIndex];
+                if (current.x == x && current.y == y) {
+                    elementInOpenList = current;
+                }
+            }
+            if (elementInOpenList != null) {
+                if (elementInOpenList.pathLength > pathLength) {
+                    openList.splice(openListIndex, 1);
+                } else {
+                    return;
+                }
+            }
+
+            openList.push({
                 x: x,
                 y: y,
                 distance: calcDistance(x, y, endX, endY),
-                previous: element
+                pathLength: pathLength,
+                previous: element,
+                length: element.length + 1
             });
-            queue.sort(sort);
         }
     }
 
@@ -45,54 +71,111 @@ function PathFinder() {
             currentElement = currentElement.previous;
         }
         while (currentElement != null);
-
         return path;
     }
 
-    this.findPath = function (startX, startY, endX, endY, grid, width, heigth) {
-        var queue = [];
-        var visited = [];
 
-        queue.push({
+
+    this.findPathAsync = async function (startX, startY, endX, endY, grid, width, heigth) {
+        return this.findPath(startX, startY, endX, endY, grid, width, heigth);
+    }
+
+    this.findPath = function (startX, startY, endX, endY, grid, width, heigth) {
+        this.openList = [];
+        this.closedList = [];
+
+        this.openList.push({
             x: startX,
             y: startY,
             distance: calcDistance(startX, startY, endX, endY),
-            previous: null
+            pathLength: 0,
+            previous: null,
+            length: 0
         });
 
-        while (queue.length > 0) {
-            var element = queue.pop();
+        var checkedTiles = 0;
+        while (this.openList.length > 0) {
+            this.openList.sort(sort);
+            var element = this.openList.shift();
+            checkedTiles++;
             if (element.x == endX && element.y == endY) {
+                console.log("Took " + checkedTiles + " checks to find Path");
                 return formatPath(element);
             }
+            if (debugPathFinding) {
+                this.sleep(20);
+            }
+
+            this.closedList.push(element);
 
             //UP
             if (element.y > 0) {
                 var x = element.x;
                 var y = element.y - 1;
-                checkTile(visited, queue, grid, element, x, y, endX, endY);
+                expandTile(this.closedList, this.openList, grid, element, x, y, endX, endY);
             }
 
             //DOWN
             if (element.y < heigth - 1) {
                 var x = element.x;
                 var y = element.y + 1;
-                checkTile(visited, queue, grid, element, x, y, endX, endY);
+                expandTile(this.closedList, this.openList, grid, element, x, y, endX, endY);
             }
 
             //RIGHT
             if (element.x < width - 1) {
                 var x = element.x + 1;
                 var y = element.y;
-                checkTile(visited, queue, grid, element, x, y, endX, endY);
+                expandTile(this.closedList, this.openList, grid, element, x, y, endX, endY);
             }
 
             //LEFT
             if (element.x > 0) {
                 var x = element.x - 1;
                 var y = element.y;
-                checkTile(visited, queue, grid, element, x, y, endX, endY);
+                expandTile(this.closedList, this.openList, grid, element, x, y, endX, endY);
             }
         }
+        console.log("Took " + checkedTiles + " checks to find no Path");
+        var nearestElementToEnd = {
+            distance: Number.MAX_VALUE
+        };
+        for (var i = 0; i < this.closedList.length; i++) {
+            var element = this.closedList[i];
+            if (element.distance < nearestElementToEnd.distance) {
+                nearestElementToEnd = element;
+            }
+        }
+        return formatPath(nearestElementToEnd);
+    }
+
+    this.draw = function () {
+        if (!debugPathFinding) {
+            return;
+        }
+        if (!this.openList || !this.closedList || !game.gameArea.tiles) {
+            return;
+        }
+        ctx.fillStyle = "green";
+        var margin = game.tileSize / 5;
+        for (i = 0; i < this.openList.length; i++) {
+            currentTile = game.gameArea.tiles[this.openList[i].x][this.openList[i].y];
+            ctx.fillRect(currentTile.x + margin, currentTile.y + margin, currentTile.width - margin * 2, currentTile.height - margin * 2);
+        }
+
+
+        ctx.fillStyle = "red";
+        for (var i = 0; i < this.closedList.length; i++) {
+            if (isNaN(this.closedList[i].x) || isNaN(this.closedList[i].y)) {
+                continue;
+            }
+            currentTile = game.gameArea.tiles[this.closedList[i].x][this.closedList[i].y];
+            ctx.fillRect(currentTile.x + margin, currentTile.y + margin, currentTile.width - margin * 2, currentTile.height - margin * 2);
+        }
+
+    }
+
+    this.sleep = function (ms) {
+        return new Promise(r => setTimeout(r, ms));
     }
 }

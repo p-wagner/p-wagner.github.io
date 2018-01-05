@@ -114,6 +114,9 @@ function InfoAreaBuildComponent() {
     }
 
     this.handleMouseDown = function (e) {
+        if (game.gameArea.gameState == "GAMEOVER") {
+            return;
+        }
         if (!this.isActive()) {
             return;
         }
@@ -139,6 +142,7 @@ function InfoAreaBuildComponent() {
                         if (currentTile.tower == null) {
                             if (game.money >= towerPrize) {
                                 game.money -= towerPrize;
+                                console.log("Build Tower at " + game.gameArea.selectedTiles[i].x + " / " + game.gameArea.selectedTiles[i].y);
                                 currentTile.tower = new this.selectedTower.constructor(currentTile.x, currentTile.y, game.tileSize, game.tileSize);
                             }
                         }

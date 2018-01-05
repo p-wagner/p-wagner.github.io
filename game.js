@@ -1,4 +1,6 @@
 game = new Game();
+debugPathFinding = false;
+fillWithRandomTowers = true;
 
 function Game() {
 

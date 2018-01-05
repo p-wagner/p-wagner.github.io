@@ -8,11 +8,11 @@ function Tile(x, y, width, height) {
     this.selected = false;
     this.tower = null;
 
-    this.isWalkable = function() {
+    Tile.prototype.isWalkable = function() {
         return this.tower == null;
     }
 
-    this.draw = function() {
+    Tile.prototype.draw = function() {
         var ctx = game.gameArea.context;
         
         ctx.fillStyle = "#bbbbbb";
@@ -29,10 +29,23 @@ function Tile(x, y, width, height) {
         }
     }
 
-    this.update = function () {
+    Tile.prototype.update = function () {
        
         if (this.tower != null) {
             this.tower.update();
+            if (this.tower.currentHealthPoints == 0) {
+                this.tower = null;
+                game.gameArea.gameAreaChanged();
+            }
+        }
+    }
+
+    Tile.prototype.hit = function(attackPower) {
+        var tower = this.tower;
+        if (tower == null) {
+            console.log("No Tower here " + x + " / " + y);
+        } else {
+            tower.hit(attackPower);
         }
     }
 }
