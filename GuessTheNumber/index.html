@@ -26,15 +26,15 @@
             var gesuchteZahl = Math.floor(Math.random() * 101);
 
             function raten() {
-                var zahl = document.getElementById("in").value;
+                var zahl = Number(document.getElementById("in").value);
                 var ausgabe = document.getElementById("out");
                 
                 if (zahl == gesuchteZahl) {
                     ausgabe.innerHTML = "Hurra, du hast die gesuchte Zahl " + gesuchteZahl + " gefunden!";
                     ausgabe.style.color = "green";
                 } else {
-                    var text = zahl < gesuchteZahl ? "kleiner" : "größer";
-                    ausgabe.innerHTML = "Die gesuchte Zahl ist " + text + " als deine angegebene Zahl";
+                    var text = zahl > gesuchteZahl ? "kleiner" : "größer";
+                    ausgabe.innerHTML = "Die gesuchte Zahl ist " + text + " als deine angegebene Zahl: " + gesuchteZahl;
                 }
             }
         </script>
