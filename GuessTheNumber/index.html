@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <style>
+            body {
+                text-align: center;
+            }
+            .raten-btn {
+                margin: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Finde die gesuchte Zahl zwischen 0 und 100</h2>
+        <h4 id="out">Finde die gesuchte Zahl. Gib deine erste Antwort ein</h4>
+        <input type="number" id="in"></input>
+
+        <br/>
+        <button onclick="raten()" class="raten-btn">Raten</button>
+
+        <br/>
+        <br/>
+        <br/>
+        Lade die Seite neu, um neu anzufangen und eine neue Zahl zu suchen
+
+        <script>
+            var gesuchteZahl = Math.floor(Math.random() * 101);
+
+            function raten() {
+                var zahl = document.getElementById("in").value;
+                var ausgabe = document.getElementById("out");
+                
+                if (zahl == gesuchteZahl) {
+                    ausgabe.innerHTML = "Hurra, du hast die gesuchte Zahl " + gesuchteZahl + " gefunden!";
+                    ausgabe.style.color = "green";
+                } else {
+                    var text = zahl < gesuchteZahl ? "kleiner" : "größer";
+                    ausgabe.innerHTML = "Die gesuchte Zahl ist " + text + " als deine angegebene Zahl";
+                }
+            }
+        </script>
+    </body>
+</html>
