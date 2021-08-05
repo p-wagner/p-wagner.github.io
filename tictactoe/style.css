@@ -1,0 +1,98 @@
+.cell {
+    background-color: aliceblue;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 50px;
+    height: 50px;
+    font-size: 43px;
+    text-align: center;
+}
+
+.row div:first-child {
+    margin: 0px;
+}
+.row div:last-child {
+    margin: 0px;
+}
+
+.row {
+    display: flex;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.background {
+    background-color: cornflowerblue;
+    display: inline-block;
+}
+
+.background div:first-child {
+    margin: 0px;
+}
+.background div:last-child {
+    margin: 0px;
+}
+
+.line {
+    background-color: dodgerblue;
+    position: absolute;
+    visibility: hidden;
+}
+
+#row0 {
+    width: 120px;
+    height: 5px;
+    top: 31px;
+    left: 27px;
+}
+
+#row1 {
+    width: 120px;
+    height: 5px;
+    top: 85px;
+    left: 27px;
+}
+
+#row2 {
+    width: 120px;
+    height: 5px;
+    top: 140px;
+    left: 27px;
+}
+
+#column0 {
+    height: 120px;
+    width: 5px;
+    left: 31px;
+    top: 27px;
+}
+
+#column1 {
+    height: 120px;
+    width: 5px;
+    left: 85px;
+    top: 27px;
+}
+
+#column2 {
+    height: 120px;
+    width: 5px;
+    left: 140px;
+    top: 27px;
+}
+
+#diagonal1 {
+    height: 171px;
+    width: 5px;
+    left: 84px;
+    top: 2px;
+    transform: rotate(-45deg);
+}
+
+#diagonal2 {
+    height: 171px;
+    width: 5px;
+    left: 84px;
+    top: 4px;
+    transform: rotate(45deg);
+}
